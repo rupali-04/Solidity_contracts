@@ -1,2 +1,2 @@
 # Solidity_contracts
-It has different smart contracts in Solidity language
+This Repo has different smart contracts in Solidity language.
