@@ -16,6 +16,7 @@ contract Campaign{
     address public manager;
     uint public minAmount;
     mapping(address => bool) private approvers;
+    uint conCount = 0;
     
     modifier onlyManager {
         require(msg.sender == manager);
@@ -29,6 +30,7 @@ contract Campaign{
     
     function contribute() public payable {
         require(msg.value > minAmount);
+        conCount++;
        approvers[msg.sender] = true;
     }
     
@@ -51,6 +53,15 @@ contract Campaign{
          approvals[msg.sender][index] = true;
         requests[index].approvalCount++;
        
+    }
+    
+    // Finalize the request
+    function finalizeRequest(uint index) onlyManager public {
+        require(requests[index].complete == false);
+        require(requests[index].approvalCount > (conCount/2));
+        requests[index].complete = true;
+        address payable to = payable(requests[index].recipient);
+        to.transfer(requests[index].value);
     }
     
 }
